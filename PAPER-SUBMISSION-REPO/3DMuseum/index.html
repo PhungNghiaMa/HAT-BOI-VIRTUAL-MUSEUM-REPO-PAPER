@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+<!-- Load the heavy sheet asynchronously (preload + onload swap) -->
+    <link rel="preload" href="./main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="./main.css"></noscript>  
+    <!-- Bootstrap Icons: async as well -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+      as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"></noscript>  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin = "anonymous" referrerpolicy="no-referrer">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  </head>
+  <body style="width: 100%; height:100%; overflow: hidden; margin: 0; padding: 0;">
+    <div id="landingpageContainer" class="GeneralContainer w-full min-h-full  overflow-y-auto overflow-x-hidden absolute top-0 left-0" >
+      <div class="Page_1_Container w-full h-full overflow-hidden py-5">
+        <div class="NavigationContainer w-full h-auto flex flex-row py-3 text-gray-300">
+          <div class="MuseumNameContainer w-2/12 h-auto flex justify-center items-center">
+            <h1 class="museum_name text-2xl font-semibold" data-i18n="LandingPage.museum_name"></h1>
+          </div>
+
+          <div class="NavBarContainer w-10/12 h-auto flex flex-row items-center justify-end-safe px-5">
+            <nav class="NavBar w-auto h-auto flex items-center justify-around text-md ">
+              <a data-i18n="LandingPage.about" id="about" class="navigation about px-2" href="/about">About</a>
+              <a data-i18n="LandingPage.gallery" id="gallery" class="navigation gallery px-2" href="/gallery">Gallery</a>
+              <a data-i18n="LandingPage.contact" id="contact" class="navigation contact px-2" href="/contact">Contact</a>
+            </nav>
+            <div class="LanguageSwitcherContainer w-auto h-auto flex flex-row items-center transition-all ease-in-out 10s text-xs font-semibold">
+              <div class="VietBtn lang flex items-center justify-around mx-2 border-2 border-gray-200 rounded-lg text-gray-200">
+                <button href="/" onclick="changeLanguage('vi')">VI</button>
+              </div>
+              <div class="EnBtn lang hidden mx-2 border-2 border-gray-400 hover:border-orange-400 rounded-lg text-gray-300">
+                <button href="/" onclick="changeLanguage('en')">EN</button>
+              </div>
+            </div>
+          </div>
+
+      </div>
+
+        <div class="ContentContainer w-full h-auto overflow-hidden my-3 bg-transparent">
+          <div class="WrapContainer w-auto overflow-hidden" style="max-height: fit-content;">
+            <div class="PagesContainer w-full h-auto overflow-auto">
+              <div id="landingpage" class="landingpage w-full" style="height: fit-content"></div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="Footer w-full h-auto">
+          <div class="w-full h-auto flex flex-row items-center justify-center CircleWrapContainer">
+            <div class="WrapperCircle rounded-2xl mx-2 flex items-center justify-center">
+              <div class="Circle rounded-2xl"></div>
+            </div>
+            <div class="WrapperCircle rounded-2xl mx-2 flex items-center justify-center">
+              <div class="Circle rounded-2xl"></div>
+            </div>
+            <div class="WrapperCircle rounded-2xl mx-2 flex items-center justify-center">
+              <div class="Circle rounded-2xl"></div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+
+    <!--  Game Container -->
+    <div class="loading-container" id="loading-container">
+        <!-- The new loader with a wave effect and percentage display -->
+        <div id="loader-container" id="loader-container" class="loader">
+            <div id="loader-percentage" class="loader-percentage">0%</div>
+        </div>
+    </div>
+    
+    <div class="MenuContainerWrapper w-full h-full flex items-center justify-center bg-amber-300">
+      <div class="menu-container" id="menu-container" style="display: none;">
+        <div class="MenuCloseContainer flex items-center justify-end" style="width:100%;">
+          <i class="menu_close bi bi-x bg-orange-400 rounded-2xl" id="menu-close" ></i>
+        </div>
+      
+        <h2>Menu</h2>
+      
+        <div style="font-size: 18px; font-weight: 600; color: ivory;">
+          Select the Gallery / Museum
+        </div>
+      
+        <div id="menu-selection-list"></div>
+        <hr>
+        <div class="GuidanceContainer py-5 text-gray-300 text-center">
+          <ul>
+            <li class="text-gray-300">Use WASD to move around</li>
+            <li class="text-gray-300">Escape key to open/close menu</li>
+            <li class="text-gray-300">Hover on annotation for details</li>
+            <li class="text-gray-300">Click on annotation to upload image</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="toast-alert" id="toast-alert"></div>
+    
+    <div class="upload-modal" id="upload-modal">
+      <div id="upload-close" class="upload-modal-close">
+        <i class="bi bi-x"></i>
+      </div>
+    
+      <div class="upload-header">
+        <h2>Upload Image</h2>
+      </div>
+    
+      <div class="upload-container" id="upload-container">
+        <label for="upload-input" class="upload-label">
+          <div id="upload-text" class="flex items-center justify-center text-gray-300">Upload file here</div>
+          <img src="" alt="" class="upload-preview" id="upload-preview" style="display: none;">
+        </label>
+        <input type="file" id="upload-input" accept="image/png, image/jpeg, image/webP, image/jpg" style="display: none;">
+      </div>
+    
+      <div class="upload-details overflow-auto">
+        <input type="text" name="" id="upload-title" placeholder="title" maxlength="30">
+        <textarea name="" id="upload-vietnamese-description" placeholder="Vietnamese Description"></textarea>
+        <textarea name="" id="upload-english-description" placeholder="English-description"></textarea>
+        <button type="submit" id="upload-btn" class="btn flex justify-center items-center gap-5">
+          Upload
+          <div class="spinner" id="upload-spinner"></div>
+        </button>
+      </div>
+    </div>
+
+    <div id="ImageShowContainer" class="ImageShowContainer" id="image-show-container" style="display: none;">
+      <div class="FirstColContainer w-1/2 h-full flex items-center justify-center">
+        <div id="FirstIMGCol" class="FirstIMGCol w-auto max-w-full h-full py-5 object-contain"></div>
+      </div>
+      <div id="SecondIMGCol" class="SecondIMGCol w-1/2 h-auto overflow-hidden mx-5 my-5">
+        <div id="TopContainer" class="TopContainer w-full max-h-2/12 flex flex-row">
+          <div id="TitleContainer" class="TitleContainer w-11/12 flex items-center justify-center"></div>
+          <div id="CancelBtnContainer" class="CancelBtnContainer w-1/12 flex items-center justify-center cursor-pointer">
+            <i class="display_image_closeBtn bi bi-x"></i>
+          </div>
+        </div>
+        <hr class="Seperator">
+        <div id="BottomContainer" class="BottomContainer  w-full flex flex-wrap max-h-10/12 overflow-auto px-5 py-8"></div>
+      </div>
+    </div>
+    
+
+
+    <div id="model-container" style="display: none; width: 100dvw; height: 100dvh; position: absolute; top: 0; left: 0;"></div> 
+
+    <script type="module">
+      // Render landing page quickly with template
+      import landingPageHTML from './template/landingpage_template.js';
+
+      document.getElementById('landingpage').innerHTML = landingPageHTML;
+      
+      // Lazy i18n loader
+      const lazyI18n = () =>
+        import('./src/i18next.js').then(({ initI18next, updateContent, changeLanguage }) => {
+          window.changeLanguage = changeLanguage;
+          return initI18next().then(updateContent);
+        });
+
+      // Run i18n initialization when idle (or asap via setTimeout)
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => lazyI18n());
+      } else {
+        setTimeout(() => lazyI18n(), 0);
+      }
+
+      let isGameInitialized = false;
+      let galleryContainer = null;
+
+      // DOM refs
+      const generalContainer = document.getElementById('landingpageContainer');
+      const modelContainer   = document.getElementById('model-container');
+      const menuContainer    = document.getElementById('menu-container');
+      const galleryLink      = document.getElementById('gallery');
+
+      // Handle Start button → lazy load game
+      const waitForStartButton = () => {
+        const btn = document.getElementById('start_button');
+        if (!btn) return requestAnimationFrame(waitForStartButton);
+
+        btn.addEventListener('click', async () => {
+          if (!isGameInitialized) {
+            const { initializeGame } = await import('./src/game_logic/index.js');
+            requestAnimationFrame(() => initializeGame('model-container'));
+            isGameInitialized = true;
+          }
+          if (generalContainer) generalContainer.style.display = 'none';
+          if (modelContainer)   modelContainer.style.display   = 'block';
+          if (menuContainer)    menuContainer.style.display    = 'flex';
+        });
+      };
+      waitForStartButton();
+
+      // Handle Gallery → lazy load gallery code
+      if (galleryLink) {
+        galleryLink.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          if (!galleryContainer) {
+            galleryContainer = document.createElement('div');
+            galleryContainer.id = 'gallery-main-container';
+            Object.assign(galleryContainer.style, {
+              width: '100vw', height: '100vh', background: '#fff',
+              position: 'absolute', top: '0', left: '0', zIndex: '1000'
+            });
+            document.body.appendChild(galleryContainer);
+          }
+
+          if (generalContainer) generalContainer.style.display = 'none';
+          if (modelContainer)   modelContainer.style.display   = 'none';
+          if (menuContainer)    menuContainer.style.display    = 'none';
+          galleryContainer.style.display = 'block';
+
+          const { initGalleryPage } = await import('./src/gallery_logic.js');
+          initGalleryPage(galleryContainer);
+        });
+      }
+
+      // Prefetch game bundle in idle time for smoother Start click
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => import('./src/game_logic/index.js'));
+      } else {
+        setTimeout(() => import('./src/game_logic/index.js'), 1500);
+      }
+    </script>
+
+  </body>
+</html>
