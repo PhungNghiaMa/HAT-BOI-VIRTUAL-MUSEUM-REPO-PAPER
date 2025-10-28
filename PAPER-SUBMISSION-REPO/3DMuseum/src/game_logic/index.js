@@ -911,10 +911,6 @@ async function loadModel() {
         //   AssetDataMap.set(item.asset_mesh_name , item)
         // }
 
-        // let URL = "QmV55VNUfsGpCqv18Ak2B2VMHRxpaeupFedBMBJQVZ61zq"
-        // await prefetchAudio(URL)
-        // playAudio(URL)
-
 
         // --- SCENE SETUP (executes after all assets are downloaded) ---
         scene.add(gltf.scene);
